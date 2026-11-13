@@ -19,7 +19,7 @@ def metadata():
         "downstream": "巡检组长审阅分诊误报和漏检，决定下一轮人工现场检查顺序",
         "entities": ["管段复核样本", "分诊规则试验", "巡检复核简报"],
         "dataset_name": "城北管段夜间流量与已复核标签",
-        "columns": [{"key": "segment_id", "label": "管段编号", "type": "string"}] + [{"key": k, "label": l, "type": "number"} for k, l in zip(FEATURES, LABELS)] + [{"key": "confirmed_leak", "label": "复核漏点(1/0)", "type": "number"}],
+        "columns": [{"key": "segment_id", "label": "管段编号", "type": "string"}] + [{"key": k, "label": l, "type": "number"} for k, l in zip(FEATURES, LABELS)] + [{"key": "confirmed_leak", "label": "复核漏点(1/0)", "type": "number"}, {"key": "segment_version", "label": "管段版本", "type": "number", "optional": True, "default": 1}],
         "parameters": [{"key": "max_depth", "label": "决策树最大深度", "type": "number", "default": 3, "min": 1, "max": 8}, {"key": "min_leaf", "label": "叶节点最少样本", "type": "number", "default": 5, "min": 2, "max": 20}],
         "workbench_title": "漏损分诊规则试验", "action_label": "训练并核验分诊规则", "unit": "段管线",
         "accent": "oklch(48% 0.10 210)", "style": "blueprint",
@@ -40,7 +40,7 @@ def seed_records():
         leak = (flow > 26 and pressure > 10) or (sound > 50 and age > 18) or pressure > 25
         if rng.random() < 0.07:
             leak = not leak
-        rows.append({"segment_id": f"NC-{i+1:03}", "night_flow": round(flow, 2), "pressure_drop": round(pressure, 2), "acoustic_db": round(sound, 1), "pipe_age": age, "confirmed_leak": int(leak)})
+        rows.append({"segment_id": f"NC-{i+1:03}", "night_flow": round(flow, 2), "pressure_drop": round(pressure, 2), "acoustic_db": round(sound, 1), "pipe_age": age, "confirmed_leak": int(leak), "segment_version": 1})
     return rows
 
 
